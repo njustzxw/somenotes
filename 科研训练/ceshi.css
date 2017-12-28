@@ -1,0 +1,350 @@
+ul{
+	margin:0 ;
+}
+select {  
+	border: solid 1px #000;  
+	appearance:none;  
+	-moz-appearance:none;  
+	-webkit-appearance:none;  
+	background: none;
+	outline: none;
+} 
+
+   
+#calendar-head {
+    width: 100%;
+    background: #5788e6;
+    padding-left: 12px;
+}
+.event-chg {
+    float: left;
+    padding: 0px; 
+    height: 40px;
+}
+.event-chg li {
+    float: left;
+    margin-left: 15px;
+    line-height: 20px;
+    margin: 6px;
+    padding: 4px 11px;
+    color: white;
+}
+.head-choose {
+    background: white;
+    color: #5494f7!important;
+    border-radius: 7px;
+}
+.event-chg li:hover {
+    cursor: pointer;
+    opacity: 0.8;
+}
+.header1{
+	height: 90px;
+	background: #eef7fb;
+    width: 100%;
+}
+.year{
+	width: 90px;
+    height: 90px;
+    background: #eef7fb;
+    border-right: 1px solid white;
+    float: left;
+    position: relative;
+}
+#selectedy {
+    display: block;
+    text-align: center;
+    font-size: 16px;
+    height: 90px;
+    width: 90px;
+    border:none;
+    padding: 0 25%;
+    background: #eef7fb;
+    border-right: 1px solid white;
+}
+#selectedy option{
+	height:50px
+}
+.button_year,.button_year:hover,.button_year:visited,.button_year:focus{
+	outline: none !important;
+    border: none!important;
+    height: 90px;
+    width: 90px;
+    background: aliceblue!important;
+    border-right: 1px solid white!important;
+    position: relative;
+}
+.triangle-bottomright{
+	border-bottom: 20px solid #9aa7bb;
+	border-left: 20px solid transparent;
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	z-index: 3;
+}
+.dropdown-menu a:hover{
+	background:#3d77c7!important;
+	color: white!important;
+}
+.md-left{
+	width: 1060px;
+    float: left;
+}
+.wid {
+    width: 88.34px;
+    height: 46px;
+    line-height: 40px;
+    font-size: 15px;
+    text-align: center;
+}
+.month>li:hover, .day1>li:hover {
+    cursor: pointer;
+    color: white;
+    background: #3d77c7;
+}
+.daybox{
+	float: left;
+	text-align: center;
+	line-height: 45px;
+	font-size: 13px;
+	position: relative;
+}
+.daybox>span {
+    width: 4px;
+    height: 4px;
+    background: #3773d0;
+    display: block;
+    border-radius: 50%;
+    position: absolute;
+    left: 50%;
+    bottom: 6px;
+}
+.sc-actions{
+	width: 28%;
+    padding: 5px;
+    height: 100%;
+    box-sizing: border-box;
+    float: right;
+}
+.sc-return-today {
+	cursor: pointer;
+    border: 1px solid #3773d0;
+    color: #3773d0;
+    border-radius: 5px;
+    margin-top: 5px;
+    display: block;
+    background-color: #F5F5F9;
+    width: 72px;
+    font-size: 0.8em;
+    margin: auto;
+    float: right;
+    margin-right: 20px;
+    text-align: center;
+    padding:3px;
+}
+.sc-week {
+    border: solid #e0e0e0;
+    border-width: 1px 0;
+    height: 10%;
+    font-weight: 400;
+    font-size: 20px;
+    color: #4A4A4A;
+}
+.sc-week-item {
+    width: 16.66%;
+    height: 100%;
+    padding: 1%;
+    float: left;
+    background-color: white;
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 15px;
+    text-align: center;
+}
+.day-item{
+	width: 191.6px;
+	background-color: #ffffff;
+	box-sizing: border-box;
+	color: rgba(105, 103, 103, 0.74);
+	border-right:1px solid #e0e0e0;
+}
+.day_height_1{
+	min-height: 160px;
+}
+.day_height_2{
+	min-height: 80px;
+}
+#calendar{
+	text-align: center;
+	font-family: "Microsoft Yahei";
+	color: #4A4A4A;
+	box-shadow: 0px 0px 1px #bdbdbd;
+	border-width: 1px 1px 0 1px;
+	border-color: #E6E4E0;
+	border-style: solid;
+	float: left;
+}
+.month_selected{
+	color: white;
+	background: #3d77c7;
+}
+.table-body{
+	display: table;
+	width: 1150px;
+	table-layout: fixed;
+	word-break: break-all;
+	word-wrap: break-word;
+}
+.sc-body-row{
+	border-bottom:1px solid #e0e0e0;
+	display: table-row;
+	table-layout: fixed;
+	word-break: break-all;
+	word-wrap: break-word;
+}
+.day{
+	font-size: 0.6em;
+	padding: 2px;
+	width: 100%;
+	text-align: left;
+	background: #fffaf4;
+}
+.contentlist{
+	text-align: left;
+	color: #5788E6;
+	margin-left: 3px;
+	font-size: 12px;
+	text-align: left;
+}
+.more{
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+#blockdiv {
+	min-width: 200px;
+	max-width: 330px;
+	z-index: 1001;
+	border-color: #5788E6;
+	background-color: rgba(255, 255, 255, .9);
+	padding: 5px;
+}
+
+.box_event li {
+	display: bliock;
+	margin: 3px 5px;
+}
+.day-item:hover{
+	opacity: 0.9;
+	box-shadow: #666 0px 0px 10px;
+	z-index: 1000;
+	cursor: default;
+}
+.day-item:hover .day{
+	color:red;
+}
+.table_ceil{
+	display:table-cell;
+	word-wrap: break-word;
+	word-break:break-all;
+	border-bottom: 1px solid #e0e0e0;
+	width: 192px;
+}
+.stock_name {
+	margin: 5px 3px 0 0;
+	background: #a1bcda;
+	color: white;
+	padding: 2px 5px;
+	border-radius: 3px;
+	width: 58px;
+	height: 20px;
+	display: inline-block;
+	line-height: 16px;
+	float: left;
+}
+.table_head_cor {
+	color: #818284;
+}
+.table_totle tr {
+    height: 45px;
+}
+.table_totle tr:nth-child(odd) {
+    background: #f1f5f9;
+}
+.table_cor {
+    color: #5788E6;
+}
+.modal-body {
+    max-height: 500px;
+    overflow-y: auto;
+}
+.modal-header1 {
+    padding: 15px 15px 10px;
+}
+.modal-content {
+    border: none;
+}
+.table_totle {
+    width: 98%;
+    margin: 0 1%;
+    text-align: center;
+}
+.active {
+    background: #337ab7 !important;
+    color: white !important;
+}
+.pageinput {
+	width: 40px;
+}
+
+.borderline {
+	border: 1px solid #E8E8E8;
+}
+.table_totle tr:nth-child(n+2):hover {
+	cursor: pointer;
+	background: #e2f2fd;
+}
+
+.day-item:hover {
+    opacity: 0.9;
+    box-shadow: #666 0px 0px 10px;
+    z-index: 1000;
+}
+.day-item:hover p{
+	color: rgba(105, 103, 103, 0.74);
+}
+
+.contentlist p:hover{
+	color: #5788E6;
+}
+.day1{
+	background: #eef7fb;
+	border-top: 1px solid white;
+}
+.sy_1{
+	width: 188px !important;
+    height: auto;  
+    word-wrap:break-word;  
+    word-break:break-all;  
+    overflow: hidden;  
+    line-height: 16px;
+    padding-top:8px;
+    white-space:normal;
+}
+.persent_day{
+	border:1px dashed rgb(87, 136, 230);
+}
+.selectday{
+	border: 2px solid #86a7ff!important; 
+}
+.selectday2{
+	border: 1px dashed rgb(87, 136, 230);
+    z-index: 1000;
+}
+.report_content1 {
+    margin: 0;
+    width: 120px;
+    float: left;
+    display: block;
+}

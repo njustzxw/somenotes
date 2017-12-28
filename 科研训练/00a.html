@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>日历</title>
+		<link rel="stylesheet" type="text/css" href="../css/infomation.css" />
+		<link rel="stylesheet" type="text/css" href="http://afajr.oss-cn-hangzhou.aliyuncs.com/pcweb/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="../css/test.css" />
+		<link rel="stylesheet" type="text/css" href="../css/ceshi.css" />
+	</head>
+	<body>
+		<body style="">
+			<!--main开始-->
+			<div id="main" class="clearfix" style="">
+				<div id="clearBox" class="clearfix">
+					<div id="main_left" class="fl" style="width: 100%;">
+						<ul class="banner1 bannerTitle1 clearfix bottomline" style="line-height: 16px;padding: 20px 0 0;margin: 0 2% 25px;">
+							<li class="fl" data-block="info_news" data-key='0'>实时新闻</li>
+							<li class="fl" data-block="info_bk" data-key='0'>热点板块</li>
+							<li class="fl" data-block="info_tc" data-key='0'>题材机会</li>
+							<li class="fl" data-block="info_search" data-key='0' v-if="IMP==10">事件分析</li>
+							<li class="fl" data-block="info_calendar" data-key='0'>投资日历</li>
+						</ul>
+						<div class="contentMain fl" style="width: 100%;padding: 0 2%; margin-bottom: 50px;">
+							<div id="info_calendar" class="clearfix">
+								<div id="calendar-head" class="clearfix">
+									<ul class="event-chg">
+										<li v-for="(item,index) in head_list" @click="chg_event(index)" :class="[index==head_choose?'head-choose':'']">{{item}}</li>
+									</ul>
+								</div>
+								<div class="po-relative" id='calendar'>
+									<div class="header1">
+										<div class="year">
+											<div class="btn-group">
+												<button type="button" class="btn btn-default dropdown-toggle button_year" data-toggle="dropdown">
+													{{year}}
+													<div id="xl" class="triangle-bottomright"></div>
+												</button>
+												<ul class="dropdown-menu" role="menu" style="min-width: 90px;">
+													<li v-for="item in yearList" :value='item' @click="year=item">
+														<a href="#">{{item}}</a>
+													</li>
+												</ul>
+											</div>
+										</div>
+										<div class="md-left">
+											<ul class="month clearfix">
+												<li v-for="(item,index) in monthList" class="wid fl" :value="index+1" @click="month=(index+1)" :class="[(index+1)==month?'month_selected':'',index==new Date().getMonth()?'persent_day':'']">{{item}}</li>
+											</ul>
+											<ul class="clearfix day1">
+												<li v-for='item in dayList' class="daybox" :style="{'width':1060/dayList-0.135+'px'}" @click="scroll(item,$event)" :class="[item==clickday?'month_selected':'',item==new Date().getDate()?'persent_day':'']" >
+													{{item}}
+													<span v-show="new Date(year+'-'+month+'-'+item).getDay()%7!=0&&new Date(year+'-'+month+'-'+item).getDay()%7!=6"></span>
+												<sup style="top:-1em" v-show="new Date(year+'-'+month+'-'+item).getDay()%7==0||new Date(year+'-'+month+'-'+item).getDay()%7==6">{{new Date(year+'-'+month+'-'+item).getDay()%7|weekend}}</sup>
+												</li>
+											</ul>
+										</div>
+									</div>
+									<div class="sc-header clearfix">
+										<div class="sc-actions">
+											<span class="sc-return-today" @click="returnToday">回到今日</span>
+										</div>
+									</div>
+									<div class="sc-body">
+										<div class="sc-week clearfix">
+											<div class="sc-week-item" v-for="item in weekList">星期{{item}}</div>
+										</div>
+										<div class="sc-body" v-show="head_choose==0">
+											<div class="table-body">
+												<div class="sc-body-row clearfix" v-for="(weekNum,index) in dateList" v-show="dateList[index][0][0]<=month">
+													<div v-for="(item,ind) in dateList[index]" v-if="(ind+1)!=6&&(ind+1)!=7" class="day-item  table_ceil day_height_1" :date="item[1]" :ii="ind+1" :class="[item[0]==month?'sc-month':'sc-other-month',(item[0]==(new Date().getMonth()+1)&&item[1]==new Date().getDate())?'selectday':'']">
+														<div class="day nowmonth">{{item[0]}}月{{item[1]}}日</div>
+														<ul class="total lineh30 fsize_12 clearfix" v-show="trade_tip_info_data[item[2]] !=undefined||performance_report_info_data[item[2]] !=undefined||mj_data[item[2]] !=undefined||macro_data[item[2]] !=undefined ">
+															<li v-for="(liitem,index) in mj_data[item[2]]" v-show="item[3]!=0" class="contentlist more sy_1">{{liitem}}</li>
+															<li v-for="(liitem,index) in macro_data[item[2]]" v-show="item[3]!=0" class="contentlist more sy_1">{{liitem}}</li>
+															<li v-for="(liitem,index) in trade_tip_info_data[item[2]]" class="contentlist " @click="popbox(item[1],liitem[0],liitem[1],0,true)">
+																<span class="stock_name">{{liitem[4]}}</span>
+																<p class="report_content1">{{liitem[3]}}</p>
+															</li>
+															<li v-for="(liitem,index) in performance_report_info_data[item[2]]" class="contentlist " @click="popbox(item[1],liitem[0],liitem[1],0,true)">
+																<span class="stock_name">{{liitem[4]}}</span>
+																<p class="report_content1">{{liitem[3]}}</p>
+															</li>
+														</ul>
+													</div>
+													<div style="width: 191.6px;display: table-cell;" class="clearfix weekend">
+														<div v-for="(item,ind) in dateList[index]" v-if="(ind+1)==6||(ind+1)==7" class="day-item fl table_ceil day_height_2" :date="item[1]" :ii="ind+1" :class="[item[0]==month?'sc-month':'sc-other-month',(item[0]==(new Date().getMonth()+1)&&item[1]==new Date().getDate())?'selectday':'']">
+															<div class="day nowmonth">{{item[0]}}月{{item[1]}}日</div>
+															<ul class="total lineh30 fsize_12 clearfix" v-show="trade_tip_info_data[item[2]] !=undefined||performance_report_info_data[item[2]] !=undefined||mj_data[item[2]] !=undefined||macro_data[item[2]] !=undefined ">
+																<li v-for="(liitem,index) in mj_data[item[2]]" v-show="item[3]!=0" class="contentlist more sy_1">{{liitem}}</li>
+																<li v-for="(liitem,index) in macro_data[item[2]]" v-show="item[3]!=0" class="contentlist more sy_1">{{liitem}}</li>
+																<li v-for="(liitem,index) in trade_tip_info_data[item[2]]" class="contentlist more" @click="popbox(item[1],liitem[0],liitem[1],0,true)">
+																	<span class="stock_name">{{liitem[4]}}</span>
+																	<p class="report_content1">{{liitem[3]}}</p>
+																</li>
+																<li v-for="(liitem,index) in performance_report_info_data[item[2]]" class="contentlist more" @click="popbox(item[1],liitem[0],liitem[1],0,true)">
+																	<span class="stock_name">{{liitem[4]}}</span>
+																	<p class="report_content1">{{liitem[3]}}</p>
+																</li>
+												
+															</ul>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+											
+										<!--财经事件-->
+										<div class="sc-body" v-show="head_choose==1">     
+											<div class="sc-body-row clearfix" v-for="(weekNum,index) in dateList" v-show="dateList[index][0][0]<=month">
+												<div v-for="(item,ind) in dateList[index]" @mouseleave="HiddenInfo" @mouseenter="ent(item[0],ind+1,mj_data[item[2]],$event)" class="day-item fl"  :date="item[1]"  :ii="ind+1" :class="[((ind+1)%7==6||(ind+1)%7==0)?'day_height_2':'day_height_1',item[0]==month?'sc-month':'sc-other-month']" >
+													<div class="day nowmonth">{{item[0]}}月{{item[1]}}日</div>
+													<ul class="total lineh28 fsize_12"  v-show="mj_data[item[2]] !=undefined " >
+														<li v-for="(liitem,index) in mj_data[item[2]]" v-show="index<6&&item[3]!=6&&item[3]!=0" class="contentlist more">{{liitem}}</li>  
+														<li v-for="(liitem,index) in mj_data[item[2]]" v-show="index<2&&(item[3]==6||item[3]==0)" class="contentlist more">{{liitem}}</li>
+														<!--<p v-show='mj_data[item[2]]'>查看更多</p>-->
+														<!--<p v-show='showmore(mj_data[item[2]],0)'>查看更多</p>-->
+													</ul>
+												</div>
+											</div>
+										</div>
+										<!--宏观事件-->
+										<div class="sc-body" v-show="head_choose==2">     
+											<div class="sc-body-row clearfix" v-for="(weekNum,index) in dateList" v-show="dateList[index][0][0]<=month">
+												<div v-for="(item,ind) in dateList[index]" @mouseleave="HiddenInfo" @mouseenter="ent(item[0],ind+1,macro_data[item[2]],$event)" class="day-item fl"  :date="item[1]"  :ii="ind+1" :class="[((ind+1)%7==6||(ind+1)%7==0)?'day_height_2':'day_height_1',item[0]==month?'sc-month':'sc-other-month']" >
+													<div class="day nowmonth">{{item[0]}}月{{item[1]}}日</div>
+													<ul class="total lineh28 fsize_12"  v-show="macro_data[item[2]] !=undefined " >
+														<li v-for="(liitem,index) in macro_data[item[2]]" v-show="index<6&&item[3]!=6&&item[3]!=0" class="contentlist more">{{liitem}}</li>  
+														<li v-for="(liitem,index) in macro_data[item[2]]" v-show="index<2&&(item[3]==6||item[3]==0)" class="contentlist more">{{liitem}}</li>
+														<!--<p v-show='macro_data[item[2]]'>查看更多</p>-->
+													</ul>
+												</div>
+											</div>
+										</div>
+										<!--交易提示-->
+										<div class="sc-body"  v-show="head_choose==3">
+											<div class="table-body">
+												<div class="sc-body-row clearfix" v-for="(weekNum,index) in dateList" v-show="dateList[index][0][0]<=month">
+													<div v-for="(item,ind) in dateList[index]" v-if="(ind+1)!=6&&(ind+1)!=7" class="day-item  table_ceil day_height_1" :date="item[1]"  :ii="ind+1" :class="[item[0]==month?'sc-month':'sc-other-month']">
+														<div class="day nowmonth">{{item[0]}}月{{item[1]}}日</div>
+														<ul class="total lineh30 fsize_12 clearfix" v-show="trade_tip_info_data[item[2]] !=undefined ">
+															<li v-for="(liitem,index) in trade_tip_info_data[item[2]]"  class="contentlist " @click="popbox(item[1],liitem[0],liitem[1],0,true)">
+																<span class="stock_name">{{liitem[4]}}</span>
+																<p class="report_content1">{{liitem[3]}}</p>
+															</li>
+														</ul>
+													</div>
+													<div style="width: 191.6px;display: table-cell;" class="weekend clearfix">
+														<!--星期六星期日-->
+														<div v-for="(item,ind) in dateList[index]" v-if="(ind+1)==6||(ind+1)==7" class="day-item fl table_ceil day_height_2" :date="item[1]"  :ii="ind+1" :class="[item[0]==month?'sc-month':'sc-other-month']">
+															<div class="day nowmonth">{{item[0]}}月{{item[1]}}日</div>
+															<ul class="total lineh30 fsize_12 clearfix" v-show="trade_tip_info_data[item[2]] !=undefined ">
+																<li v-for="(liitem,index) in trade_tip_info_data[item[2]]" class="contentlist " @click="popbox(item[1],liitem[0],liitem[1],0,true)">
+																	<span class="stock_name">{{liitem[4]}}</span>
+																	<p class="report_content1">{{liitem[3]}}</p>
+																</li>
+															</ul>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<!--财务-->
+										<div class="sc-body" v-show="head_choose==4">
+											<div class="table-body">
+												<div class="sc-body-row clearfix" v-for="(weekNum,index) in dateList" v-show="dateList[index][0][0]<=month">
+													<div v-for="(item,ind) in dateList[index]" v-if="(ind+1)!=6&&(ind+1)!=7" class="day-item  table_ceil day_height_1" :date="item[1]"  :ii="ind+1" :class="[item[0]==month?'sc-month':'sc-other-month']">
+														<div class="day nowmonth">{{item[0]}}月{{item[1]}}日</div>
+														<ul class="total lineh30 fsize_12 clearfix" v-show="performance_report_info_data[item[2]] !=undefined ">
+															<li v-for="(liitem,index) in performance_report_info_data[item[2]]" class="contentlist " @click="popbox(item[1],liitem[0],liitem[1],0,true)">
+																<span class="stock_name">{{liitem[4]}}</span>
+																<p class="report_content1">{{liitem[3]}}</p>
+															</li>
+														</ul>
+													</div>
+													<div style="width: 191.6px;display: table-cell;" class="weekend clearfix">    <!--星期六星期日-->
+														<div v-for="(item,ind) in dateList[index]" v-if="(ind+1)==6||(ind+1)==7" class="day-item fl table_ceil day_height_2" :date="item[1]"  :ii="ind+1" :class="[item[0]==month?'sc-month':'sc-other-month']">
+															<div class="day nowmonth">{{item[0]}}月{{item[1]}}日</div>
+															<ul class="total lineh30 fsize_12 clearfix"  v-show="performance_report_info_data[item[2]] !=undefined ">
+																<li v-for="(liitem,index) in performance_report_info_data[item[2]]" class="contentlist " @click="popbox(item[1],liitem[0],liitem[1],0,true)">
+																	<span class="stock_name">{{liitem[4]}}</span>
+																	<p class="report_content1">{{liitem[3]}}</p>
+																</li>
+															</ul>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!--显示框-->
+									<div class="blockdiv borderline radius5 bg_ff hidden fl po-absolute" id="blockdiv">
+										<ul class="box_event text-left fsize_12 lineh20 clearfix"></ul>
+									</div>
+									
+								</div>
+								<!--弹框-->
+								<div id='pop'>
+									<div class="modal fade" id="popbox_event" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+										<div id="popbox_event_msg" class="modal-dialog" role="document" style="height: 560px;width:1150px">
+											<div id="" class="modal-content" style="border-radius: 2px;width:1150px">
+												<div class="modal-header1 box-header">
+													<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+													<h5 class="modal-title" id="myModalLabel" style="font-size:16px;text-align:center;color:#818284;">{{title}}</h5>
+												</div>
+												<div class="modal-body box-body clearfix" id="box_body" :style="num>20?hgt500:hgtauto">
+													<table class="table_totle">
+														<!--停牌-->
+														<tbody v-show="popclass==5">
+															<tr class="table_head_cor">
+																<td v-for="item in table_head5">{{item}}</td>
+															</tr>
+															<tr v-for='item in table_list5' @click="window.open('stock_details.html?id='+item.id+'&time='+(new Date().getTime())+'')">
+																<td class='table_cor'>{{item.name}}</td>
+																<td class='table_cor'>{{item.id}}</td>
+																<td>{{item.halt_time}}</td>
+																<td>{{item.resumption_time}}</td>
+																<td>{{item.halt_reason}}</td>
+																<td>{{item.halt_term}}</td>
+															</tr>
+														</tbody>
+														<!--复牌-->
+														<tbody v-show="popclass==6">
+															<tr class="table_head_cor">
+																<td v-for="item in table_head6">{{item}}</td>
+															</tr>
+															<tr v-for='item in table_list6' @click="window.open('stock_details.html?id='+item.id+'&time='+(new Date().getTime())+'')">
+																<td class='table_cor'>{{item.name}}</td>
+																<td class='table_cor'>{{item.id}}</td>
+																<td>{{item.fp_time}}</td>
+																<td>{{item.tp_time}}</td>
+																<td>{{item.tpjz_time}}</td>
+																<td>{{item.halt_reason}}</td>
+																<td>{{item.halt_term}}</td>
+															</tr>
+														</tbody>
+														<!--分红转增-->
+														<tbody v-show="popclass==7||popclass==8">
+															<tr class="table_head_cor">
+																<td v-for="item in table_head78">{{item}}</td>
+															</tr>
+															<tr v-for='item in table_list78' @click="window.open('stock_details.html?id='+item.id+'&time='+(new Date().getTime())+'')">
+																<td class='table_cor'>{{item.name}}</td>
+																<td class='table_cor'>{{item.id}}</td>
+																<td>{{item.profit_per|toFixed2}}{{item.profit_per==null?'--':(item.profit_per|toFixed2)}}</td>
+																<td>{{item.s_percent==null?'--':item.s_percent}}</td>
+																<td>{{item.z_percent==null?'--':item.z_percent}}</td>
+																<td>{{item.fh_obj}}</td>
+															</tr>
+														</tbody>
+														<!--业绩预告-->
+														<tbody v-show="popclass==1">
+															<tr class="table_head_cor">
+																<td v-for="item in table_head1">{{item}}</td>
+															</tr>
+															<tr v-for='item in table_list1' @click="window.open('stock_details.html?id='+item.id+'&time='+(new Date().getTime())+'')">
+																<td class='table_cor' style="width: 8%;">{{item.name}}</td>
+																<td class='table_cor' style="width: 8%;">{{item.id}}</td>
+																<td style="width: 8%;">{{item.ggdate}}</td>
+																<td style="width: 48%;text-align:left;padding-left: 20px;">{{item.yjbdsm}}</td>
+																<td :style="item.yjbdfdfag|price_color" style="width: 14%;">{{item.yjbdfd}}</td>
+																<td style="width: 6%;">{{item.yglx}}</td>
+																<td :style="item.jlr|price_color" style="width: 8%;">{{item.jlr|toFixed2}}</td>
+															</tr>
+														</tbody>
+														<!--业绩报表-->
+														<tbody v-show="popclass==2">
+															<tr class="table_head_cor">
+																<td v-for="item in table_head23">{{item}}</td>
+															</tr>
+															<tr v-for='item in table_list23' class='kb_bb' @click="window.open('stock_details.html?id='+item.id+'&time='+(new Date().getTime())+'')">
+																<td class='table_cor'>{{item.name}}</td>
+																<td class='table_cor'>{{item.id}}</td>
+																<td>{{item.ggdate}}</td>
+																<td>{{item.mgsy}}</td>
+																<td>{{item.ys}}亿</td>
+																<td :style="item.ystb|price_color">{{item.ystb|toFixed2ext('%')}}</td>
+																<!--														<td :style="item.yshb|price_color">{{item.yshbjd==null?'--':((item.yshbjd*100).toFixed(2)+'%')}}</td>-->
+																<td>{{item.jlr}}亿</td>
+																<td :style="item.jlrtb|price_color">{{item.jlrtb|toFixed2ext('%')}}</td>
+																<!--<td :style="item.jlrhbjd|price_color">{{item.jlrhbjd==null?'--':((item.jlrhbjd*100).toFixed(2)+'%')}}</td>-->
+																<td>{{item.mgjzc==null?'--':item.mgjzc}}</td>
+																<td>{{item.jzcsyl|toFixed2ext('%')}}</td>
+															</tr>
+														</tbody>
+														<!--业绩快报-->
+														<tbody v-show="popclass==3">
+															<tr class="table_head_cor">
+																<td v-for="item in table_head23">{{item}}</td>
+															</tr>
+															<tr v-for='item in table_list23' class='kb_bb' @click="window.open('stock_details.html?id='+item.id+'&time='+(new Date().getTime())+'')">
+																<td class='table_cor'>{{item.name}}</td>
+																<td class='table_cor'>{{item.id}}</td>
+																<td>{{item.ggdate}}</td>
+																<td>{{item.mgsy}}</td>
+																<td>{{item.ys}}亿</td>
+																<td :style="item.ystb|price_color">{{item.ystb==null?'--':((item.ystb).toFixed(2)+'%')}}</td>
+																<!--<td :style="item.yshb|price_color">{{item.yshb|toFixed2ext('%')}}</td>-->
+																<td>{{item.jlr}}亿</td>
+																<td :style="item.jlrtb|price_color">{{item.jlrtb==null?'--':((item.jlrtb).toFixed(2)+'%')}}</td>
+																<!--<td :style="item.jlrhbjd|price_color">{{item.jlrhbjd|toFixed2ext('%')}}</td>-->
+																<td>{{item.mgjzc}}</td>
+																<td>{{item.jzcsyl|toFixed2ext('%')}}</td>
+															</tr>
+														</tbody>
+														<tbody v-show="popclass==4">
+															<tr class="table_head_cor">
+																<td v-for="item in table_head4">{{item}}</td>
+															</tr>
+															<tr v-for='item in table_list4' @click="window.open('stock_details.html?id='+item.id+'&time='+(new Date().getTime())+'')">
+																<td class='table_cor'>{{item.name}}</td>
+																<td class='table_cor'>{{item.id}}</td>
+																<td>{{item.ggdate}}</td>
+																<td>{{item.starttime}}</td>
+																<td>{{item.endtime}}</td>
+																<td>{{item.actuallytime}}</td>
+																<!--添加-->
+															</tr>
+														</tbody>
+													</table>
+												</div>
+												<div style="text-align: center;">
+													<!--分页-->
+													<ul v-if="pagelist.length<6" class="pagination" id='page'>
+														<!--分页<5页-->
+														<li v-show="num>20" @click="(page_persent)>0?change_page_style(--page_persent):''">
+															<a href="#">&laquo;</a>
+														</li>
+														<li v-for="(item,index) in pagelist" @click="change_page_style(index)">
+															<a href="#" :class=" index==page_persent?'active':'' ">{{item}}</a>
+														</li>
+														<li v-show="num>20" @click="(page_persent)<(pagelist.length-1)?change_page_style(++page_persent):''">
+															<a href="#">&raquo;</a>
+														</li>
+													</ul>
+													<ul v-else class="pagination" id='page'>
+														<!--分页>5页-->
+														<li @click='tz(1)'>
+															<a href="#">首页</a>
+														</li>
+														<li @click="(page_persent)>0?change_page_style(--page_persent,1):''">
+															<a href="#">&laquo;</a>
+														</li>
+														<li v-for="(item,index) in pagelist_l" @click="change_page_style(item-1,1)">
+															<a href="#" :class=" (item-1)==page_persent?'active':'' ">{{item}}</a>
+														</li>
+														<li @click="(page_persent)<(pagelist.length-1)?change_page_style(++page_persent,1):''">
+															<a href="#">&raquo;</a>
+														</li>
+														<li @click='tz(2)'>
+															<a href="#" style="border-radius: 0 4px 4px 0;">尾页</a>
+														</li>
+														<li style="color: rgb(129, 129, 130);line-height: 35px;">&nbsp总共{{pagelist.length}}页,跳转至&nbsp<input type="text" class="pageinput borderline" v-model="page_persent_per" @keyup.13="tz(3)">&nbsp页</li>
+														<li><input type="button" value="确定" @click='tz(3)' class="pagebutton borderline"></li>
+													</ul>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<script src="http://afajr.oss-cn-hangzhou.aliyuncs.com/pcweb/js/jquery-3.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/jquery.ellipsis.js" type="text/javascript" charset="utf-8"></script>
+		<script src="http://afajr.oss-cn-hangzhou.aliyuncs.com/pcweb/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="http://afajr.oss-cn-hangzhou.aliyuncs.com/pcweb/js/Tween.js" type="text/javascript" charset="utf-8"></script>
+		<script src="http://afajr.oss-cn-hangzhou.aliyuncs.com/pcweb/js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/shudan_afa.js?t=20" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/vue-shudan.js?t=20170329001" type="text/javascript" charset="utf-8"></script>
+		<script src="http://m.afajr.com/static/js/stock.js" type="text/javascript" charset="utf-8"></script>
+		<script src="http://m.afajr.com/static/js/sector.js" type="text/javascript" charset="utf-8"></script>
+		<script src="http://afajr.oss-cn-hangzhou.aliyuncs.com/pcweb/js/highstock/highstock.js"></script>
+		<script src="http://afajr.oss-cn-hangzhou.aliyuncs.com/pcweb/js/highstock/modules/exporting.js"></script>
+		<script src="http://afajr.oss-cn-hangzhou.aliyuncs.com/pcweb/js/highstock/highcharts-more.js" type="text/javascript" charset="utf-8"></script>
+		<!--<script src="https://img.hcharts.cn/highcharts-plugins/highcharts-zh_CN.js" type="text/javascript" charset="utf-8"></script>-->
+		<script src="../js/requests-shudan.js?t=20171024006" type="text/javascript" charset="utf-8"></script>
+		<script src="http://afajr.oss-cn-hangzhou.aliyuncs.com/pcweb/js/d3.v4.min.js?t=2017081802"></script>
+		<!--<script src="../js/model/infomation_Too.js?t=20171024006" type="text/javascript" charset="utf-8"></script>-->
+		<script src="../js/model/yuce.js?t=20171024006" type="text/javascript" charset="utf-8"></script>
+		<!--<script src="../js/model/infocalendar.js" type="text/javascript" charset="utf-8"></script>-->
+		<script src="http://afajr.oss-cn-hangzhou.aliyuncs.com/pcweb/js/html2canvas.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/range_picker.js?t=20171024006" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/model/ceshi.js?" type="text/javascript" charset="utf-8"></script>
+		</body>
+</html>

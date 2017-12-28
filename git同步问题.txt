@@ -1,0 +1,25 @@
+命令：
+
+//git初次提交时，下面都要执行一次，之后只要执行123即可
+git init         初始化
+git config -global user.name "yourname"       为当前电脑设置用户名
+git config -global user.email "njust_zxw@163.com"   设置邮箱
+git remote add origin https://github.com/njustzxw/node_web.git       链接仓库与本地
+ git pull origin master      先检出 更新本地
+
+1.git add .      全部提交
+2.git commit -m "提交"
+
+3.git push  -u origin master
+git push  -force origin master    提交push进去
+
+
+
+
+//更新到本地
+git clone yourgitaddress(你的git地址)  
+
+
+
+
+参考：http://blog.csdn.net/miueugene/article/details/45306589
